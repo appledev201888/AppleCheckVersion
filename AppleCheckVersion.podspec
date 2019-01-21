@@ -15,9 +15,9 @@ Pod::Spec.new do |s|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  s.name         = "checkVersion"
-  s.version      = "0.0.1"
-  s.summary      = "A short description of checkVersion."
+  s.name         = "AppleCheckVersion"
+  s.version      = "0.0.2"
+  s.summary      = "A short description of AppleCheckVersion."
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
 123123
                    DESC
 
-  s.homepage     = "https://github.com/appledev201888/checkVersion"
+  s.homepage     = "https://github.com/appledev201888/AppleCheckVersion"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -80,7 +80,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/appledev201888/checkVersion.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/appledev201888/AppleCheckVersion.git", :tag => "#{s.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
