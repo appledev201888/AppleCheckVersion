@@ -95,7 +95,7 @@
             }
         } else {
 #ifdef DEBUG
-            DLog(@"AppStore上面没有找到对应id的App");
+            NSLog(@"AppStore上面没有找到对应id的App");
 #endif
         }
     }];
