@@ -49,14 +49,14 @@
         UIAlertAction *updateAction = [UIAlertAction actionWithTitle:@"立即升级" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self updateRightNow:model];
         }];
-        UIAlertAction *delayAction = [UIAlertAction actionWithTitle:@"稍后再说" style:UIAlertActionStyleDefault handler:nil];
-        //        UIAlertAction *ignoreAction = [UIAlertAction actionWithTitle:@"忽略" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        //            [self ignoreNewVersion:model.version];
-        //        }];
+//        UIAlertAction *delayAction = [UIAlertAction actionWithTitle:@"稍后再说" style:UIAlertActionStyleDefault handler:nil];
+                UIAlertAction *ignoreAction = [UIAlertAction actionWithTitle:@"忽略" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self ignoreNewVersion:model.version];
+                }];
         
         [alertController addAction:updateAction];
-        [alertController addAction:delayAction];
-        //        [alertController addAction:ignoreAction];
+//        [alertController addAction:delayAction];
+                [alertController addAction:ignoreAction];
         
         [containCtrl presentViewController:alertController animated:YES completion:nil];
     }];
@@ -102,6 +102,39 @@
     
 }
 
+#pragma mark - 获取AppStore上的版本信息 传字典
++ (void)checkNewEditionWithAppID:(NSString *)appID customAlertAndDic:(CheckVersionDicBlock )customAlertAndDic {
+    
+    [[self shareManager] getAppStoreVersion:appID customAlertAndDic:^(NSDictionary *dic) {
+        
+        if(customAlertAndDic) customAlertAndDic(dic);
+    }];
+}
+
+- (void)getAppStoreVersion:(NSString *)appID customAlertAndDic:(void(^)(NSDictionary *))dic {
+    
+    [self getAppStoreInfo:appID success:^(NSDictionary *respDict) {
+        NSInteger resultCount = [respDict[@"resultCount"] integerValue];
+        if (resultCount == 1) {
+            NSArray *results = respDict[@"results"];
+            NSDictionary *appStoreInfo = [results firstObject];
+            //字典转模型
+            AppStoreInfoModel *model = [[AppStoreInfoModel alloc] init];
+            [model setValuesForKeysWithDictionary:appStoreInfo];
+            //是否提示更新
+            BOOL result = [self isEqualEdition:model.version];
+            if (result) {
+                if(dic)dic(appStoreInfo);
+            }
+        } else {
+#ifdef DEBUG
+            NSLog(@"AppStore上面没有找到对应id的App");
+#endif
+        }
+    }];
+    
+}
+
 #pragma mark - 返回是否提示更新
 - (BOOL)isEqualEdition:(NSString *)newEdition {
     NSString *ignoreVersion = [[NSUserDefaults standardUserDefaults] objectForKey:@"ingoreVersion"];
@@ -116,7 +149,7 @@
 #pragma mark - 获取AppStore的info信息
 - (void)getAppStoreInfo:(NSString *)appID success:(void(^)(NSDictionary *))success {
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/CN/lookup?id=%@",appID]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/us/lookup?id=%@",appID]];
     [[[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (error == nil && data != nil && data.length > 0) {

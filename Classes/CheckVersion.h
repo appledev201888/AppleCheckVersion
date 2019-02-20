@@ -11,6 +11,7 @@
 @class AppStoreInfoModel;
 
 typedef void(^CheckVersionBlock)(AppStoreInfoModel *appInfo);
+typedef void(^CheckVersionDicBlock)(NSDictionary *appInfo);
 
 @interface CheckVersion : NSObject
 
@@ -29,5 +30,7 @@ typedef void(^CheckVersionBlock)(AppStoreInfoModel *appInfo);
  *  @param checkVersionBlock AppStore上版本信息回调block
  */
 + (void)checkNewEditionWithAppID:(NSString *)appID CustomAlert:(CheckVersionBlock)checkVersionBlock;
+
++ (void)checkNewEditionWithAppID:(NSString *)appID customAlertAndDic:(CheckVersionDicBlock)customAlertAndDic;
 
 @end
